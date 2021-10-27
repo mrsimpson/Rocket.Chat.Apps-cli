@@ -1,7 +1,7 @@
 {
     "name": "@mrsimpson/rc-apps-cli",
     "description": "The CLI tool for helping with Rocket.Chat Apps.",
-    "version": "1.10.0-with-proxy-support",
+    "version": "1.10.0",
     "author": "Rocket.Chat <support@rocket.chat>",
     "preferGlobal": true,
     "bin": {
@@ -24,6 +24,7 @@
         "chokidar": "^3.3.1",
         "cli-ux": "^5.3.1",
         "conf": "^6.1.0",
+        "fetch-with-proxy": "^3.0.1",
         "figures": "^3.0.0",
         "form-data": "^2.5.0",
         "fs-extra": "^8.1.0",
@@ -32,7 +33,6 @@
         "indent-string": "^4.0.0",
         "inquirer": "^6.5.0",
         "inquirer-checkbox-plus-prompt": "^1.0.1",
-        "node-fetch": "^2.6.0",
         "open": "^6.4.0",
         "pascal-case": "^2.0.1",
         "pascalcase": "^0.1.1",
@@ -94,5 +94,31 @@
             "@oclif/plugin-not-found",
             "@oclif/plugin-autocomplete"
         ]
-    }
+    },
+    "nyc": {
+        "reporter": [
+            "text",
+            "json",
+            "html"
+        ]
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/RocketChat/Rocket.Chat.Apps-cli.git"
+    },
+    "scripts": {
+        "postpack": "rm -f oclif.manifest.json",
+        "posttest": "tsc -p test --noEmit && tslint -p test -t stylish",
+        "prepack": "rm -rf lib && tsc && oclif-dev manifest && oclif-dev readme",
+        "prepare": "rm -rf lib && tsc",
+        "test": "nyc mocha --forbid-only \"test/**/*.test.ts\"",
+        "version": "oclif-dev readme && git add README.md",
+        "lint": "tslint --project tsconfig.json",
+        "view-coverage": "npm run test && http-server coverage -p 9083 -c-1"
+    },
+    "types": "lib/index.d.ts",
+    "pre-commit": [
+        "lint",
+        "test"
+    ]
 }
